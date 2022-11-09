@@ -1,0 +1,42 @@
+:root {
+    --main-color:black;
+    --bg-color:white;
+}
+
+body {
+    font-family: "courier", "monospace";
+    background-color: var(--bg-color);
+}
+
+p, h1 {
+    color: var(--main-color);
+}
+
+.big {
+    height: 2em;
+    width: 1.2em;
+}
+
+#cursor {
+    top: 1.6em;
+    left: 0.5em;
+}
+
+.cursor {
+    position: absolute;
+    background-color:var(--main-color);
+}
+
+.blinker {
+    animation-name: blinker;
+    animation-timing-function: step-start;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    background-color:var(--main-color);
+}
+
+@keyframes blinker {
+   50% {
+    opacity: 0%;
+   }
+}
