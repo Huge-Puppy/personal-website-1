@@ -114,6 +114,7 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
         timerId = setTimeout(() => {
             cursor.classList.add("blinker");
         }, 500);
+        // TODO wrap cursor when necessary
         // move cursor one space
         // get new startleft value
         var newLeft = parseFloat(startLeft.slice(0, startLeft.length-2)) + (1.2*line.innerHTML.length-6);
@@ -121,11 +122,6 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
         line.innerHTML += event.key;
     });
 }
-
-function debounce(timer) {
-    timer
-}
-
 
 
 // _____ EXECUTION ______ //
