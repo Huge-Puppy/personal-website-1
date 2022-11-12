@@ -12,6 +12,16 @@ p, h1 {
     color: var(--main-color);
 }
 
+.center {
+    justify-content: center;
+    text-align: center;
+}
+
+.fullScreen {
+    height: 100vh;
+    width: 100vw;
+}
+
 .big {
     height: 2em;
     width: 1.2em;

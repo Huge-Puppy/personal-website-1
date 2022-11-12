@@ -1,5 +1,5 @@
 // print speed in letters per second
-let printSpeed = 10;
+let printSpeed = 15;
 // size of h1 letters in em
 let h1LetterWidth = 1.2;
 let h1LetterHeight = 2.0;
@@ -13,8 +13,11 @@ function cursorH1Return(el, start) {
 }
 
 // at a rate of printSpeed, move cursor to the right by one letter width
-function moveCursor(el, count, start, width) {
+function moveCursor(el, count, start, width, noblink) {
     if (count == 0) {
+        return;
+    }
+    if (count == 0 && noblink === undefined) {
         el.classList.add("blinker");
         return;
     }
@@ -22,7 +25,7 @@ function moveCursor(el, count, start, width) {
     var newLeft = currLeft + width;
     let formattedLeft = `${newLeft}em`;
     el.style.left = formattedLeft;
-    setTimeout(() => moveCursor(el, count-1, formattedLeft, width), 1000/printSpeed)
+    setTimeout(() => moveCursor(el, count-1, formattedLeft, width), 1000/printSpeed, noblink)
 }
 
 // go down a line and to the start
@@ -66,11 +69,12 @@ function createNewLine(container, cursor, startLeft, startTop, height) {
 
 function getAnswer(container, cursor, startLeft, startTop, height) {
     let line = createNewLine(container, cursor, startLeft, startTop, height)
+    cursor.classList.add("blinker");
     // add listener that adds text as they type
+    var timerId;
     container.addEventListener("keydown", getKeystrokes = (event) => {
         if (event.code == "Enter") {
             // destroy listener;
-            console.log("removing listener");
             container.removeEventListener("keydown", getKeystrokes);
             // TODO initiate loading sequence
             // TODO send request to api to get response
@@ -80,13 +84,46 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
             return;
         }
         console.log(event.code);
-        // TODO remove blink from cursor class
-        // TODO add timer that adds it again if typing stops, debounced. 
-        // TODO move cursor one space
-        // TODO get new startleft value
-        moveCursor(cursor, 1, startLeft, 1.2)
+        if (
+            event.code == "MetaLeft" 
+            || event.code == "MetaRight"
+            || event.code == "AltRight"
+            || event.code == "AltLeft"
+            || event.code == "ControlLeft"
+            || event.code == "Tab"
+            || event.code == "ShiftLeft"
+            || event.code == "ShiftRight"
+            || event.code == "CapsLock"
+        ) {
+            return;
+        }
+        if (event.code == "Backspace") {
+            var newLeft = parseFloat(startLeft.slice(0, startLeft.length-2)) + (1.2*line.innerHTML.length-6);
+            moveCursor(cursor, 1, newLeft + "em", -1.2, true)
+            line.innerHTML = line.innerHTML.slice(0, line.innerHTML.length -1)
+            return;
+        }
+        window.typeEvent = event;
+        // remove blink from cursor class
+        cursor.classList.remove("blinker");
+        // add timer that adds it again if typing stops, debounced. 
+        if (timerId) {
+            clearTimeout(timerId);
+            cursor.classList.remove("blinker");
+        }
+        timerId = setTimeout(() => {
+            cursor.classList.add("blinker");
+        }, 500);
+        // move cursor one space
+        // get new startleft value
+        var newLeft = parseFloat(startLeft.slice(0, startLeft.length-2)) + (1.2*line.innerHTML.length-6);
+        moveCursor(cursor, 1, newLeft + "em", 1.2, true)
         line.innerHTML += event.key;
     });
+}
+
+function debounce(timer) {
+    timer
 }
 
 
