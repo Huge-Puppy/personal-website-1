@@ -1,6 +1,8 @@
 :root {
-    --main-color:black;
-    --bg-color:white;
+    /* --main-color:#c2eaba; */
+    /* --main-color:#c5f4e0; */
+    --main-color:#e6efe9;
+    --bg-color:#463f3a;
 }
 
 body {
@@ -24,7 +26,11 @@ p, h1 {
 
 .big {
     height: 2em;
-    width: 1.2em;
+    width: 1.1em;
+}
+
+.headingType {
+    font-size: 1.65em;
 }
 
 #cursor {
