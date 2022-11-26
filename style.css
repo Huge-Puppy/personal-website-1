@@ -1,87 +1,105 @@
 :root {
-    /* --main-color:#c2eaba; */
-    /* --main-color:#c5f4e0; */
-    --main-color:#e6efe9;
-    --bg-color:#463f3a;
+  /* --main-color:#c2eaba; */
+  /* --main-color:#c5f4e0; */
+  --main-color: #e6efe9;
+  --bg-color: #463f3a;
 }
 
 .header-item a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 0px 16px;
-    text-decoration: none;
-    font-size: 1em;
-    height: 2em;
-    line-height: 2em;
-  }
-  
-  /* Change the link color to #111 (black) on hover */
-  .header-item a:hover {
-    background-color: #111;
-  }
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 0px 16px;
+  text-decoration: none;
+  font-size: 1em;
+  height: 2em;
+  line-height: 2em;
+}
+
+/* Change the link color to #111 (black) on hover */
+.header-item a:hover {
+  background-color: #111;
+}
 
 body {
-    font-family: "Courier New", monospace;
-    background-color: var(--bg-color);
+  font-family: "Courier New", monospace;
+  background-color: var(--bg-color);
 }
 
 #body {
-    max-width: 70;
+  max-width: 70;
 }
 
-p, h1 {
-    color: var(--main-color);
+p,
+h1,
+li,
+a {
+  color: var(--main-color);
 }
 
 .center {
-    justify-content: center;
-    text-align: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fullScreen {
-    height: 100vh;
-    width: 100vw;
+  height: 100vh;
+  width: 100vw;
 }
 
 .big {
-    height: 2em;
-    width: 1.1em;
+  height: 2em;
+  width: 1.1em;
 }
 
 .header-item {
-    float: right;
-    display: inline;
+  float: right;
+  display: inline;
 }
 
 .headingType {
-    font-size: 1.65em;
+  font-size: 1.65em;
 }
 
 #cursor {
-    top: 1.6em;
-    left: 0.5em;
+  top: 1.6em;
+  left: 0.5em;
 }
 
 .response {
-    color: aquamarine;
+  color: aquamarine;
 }
 
 .cursor {
-    position: absolute;
-    background-color:var(--main-color);
+  position: absolute;
+  background-color: var(--main-color);
 }
 
 .blinker {
-    animation-name: blinker;
-    animation-timing-function: step-start;
-    animation-duration: 1.2s;
-    animation-iteration-count: infinite;
-    background-color:var(--main-color);
+  animation-name: blinker;
+  animation-timing-function: step-start;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  background-color: var(--main-color);
 }
 
 @keyframes blinker {
-   50% {
+  50% {
     opacity: 0%;
-   }
+  }
+}
+
+.day {
+  height: 12px;
+  width: 12px;
+  margin: 1px 1px;
+}
+
+.week {
+  float: left;
+  display: inline;
+}
+
+.year {
+  overflow: hidden;
 }
