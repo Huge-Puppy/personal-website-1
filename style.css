@@ -32,8 +32,7 @@ body {
 
 p,
 h1,
-li,
-a {
+li {
   color: var(--main-color);
 }
 
@@ -66,7 +65,7 @@ a {
   left: 0.5em;
 }
 
-.response {
+.response, a {
   color: aquamarine;
 }
 
