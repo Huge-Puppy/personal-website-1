@@ -41,7 +41,6 @@ serve(async (req) => {
     headers: {
       Authorization:
       `Bearer ${Deno.env.get('OPENAI_KEY')}`,
-        // "Bearer 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",
         "OpenAI-Organization": 'org-n4SHuIV3xqY883QplkzFqnIf',
         "Content-Type": "application/json",
     },

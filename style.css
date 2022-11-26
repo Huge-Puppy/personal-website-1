@@ -63,6 +63,10 @@ p, h1 {
     left: 0.5em;
 }
 
+.response {
+    color: aquamarine;
+}
+
 .cursor {
     position: absolute;
     background-color:var(--main-color);

@@ -47,6 +47,7 @@ function printText(text, el) {
 }
 
 function animateLine(text, textEl, cursorEl, startLeft, startTop) {
+  textEl.classList.add("response");
   printText(text, textEl);
   moveCursor(cursorEl, text.length, startLeft, letterWidth, undefined, startTop);
   return (1000 / printSpeed) * text.length;
@@ -70,13 +71,13 @@ function createNewLine(container, cursor, startLeft, startTop, height) {
 
 async function requestAnswer(question) {
   const result = await fetch(
-    "http://localhost:54321/functions/v1/ai-response",
-    // "https://jyyhfyrnykdencwlwcus.functions.supabase.co/ai-response",
+    // "http://localhost:54321/functions/v1/ai-response",
+    "https://jyyhfyrnykdencwlwcus.functions.supabase.co/ai-response",
     {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs",
-        // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5eWhmeXJueWtkZW5jd2x3Y3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg2MjAwODAsImV4cCI6MTk4NDE5NjA4MH0.60YINNo4_tUzfrf7BgzWLMMs_v92vpT4UBJLHQmQ_Tk",
+          // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5eWhmeXJueWtkZW5jd2x3Y3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg2MjAwODAsImV4cCI6MTk4NDE5NjA4MH0.60YINNo4_tUzfrf7BgzWLMMs_v92vpT4UBJLHQmQ_Tk",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ question }),
@@ -95,14 +96,12 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
   container.addEventListener(
     "keydown",
     (getKeystrokes = async (event) => {
-      console.log('keydown');
       if (event.code == "Enter") {
         // destroy listener;
         container.removeEventListener("keydown", getKeystrokes);
         // TODO initiate loading sequence
         // send request to api to get response
         let result = await requestAnswer(line.innerHTML.slice(5));
-        console.log(line.innerHTML.slice(5))
         // create a new line
         let newLine = lineReturn(body, false);
         var currTop = parseFloat(startTop.slice(0, startTop.length - 2));
