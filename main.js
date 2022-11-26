@@ -5,7 +5,7 @@ let letterWidth = 0.99;
 let h1LetterHeight = 2.0;
 
 // at a rate of printSpeed, move cursor to the right by one letter width
-function moveCursor(el, count, start, width, noblink) {
+function moveCursor(el, count, start, width, noblink, startTop) {
   if (count == 0) {
     return;
   }
@@ -18,7 +18,7 @@ function moveCursor(el, count, start, width, noblink) {
   let formattedLeft = `${newLeft}em`;
   el.style.left = formattedLeft;
   setTimeout(
-    () => moveCursor(el, count - 1, formattedLeft, width),
+    () => moveCursor(el, count - 1, formattedLeft, width, undefined, startTop),
     1000 / printSpeed,
     noblink
   );
@@ -46,9 +46,9 @@ function printText(text, el) {
   );
 }
 
-function animateLine(text, textEl, cursorEl, startLeft) {
+function animateLine(text, textEl, cursorEl, startLeft, startTop) {
   printText(text, textEl);
-  moveCursor(cursorEl, text.length, startLeft, letterWidth);
+  moveCursor(cursorEl, text.length, startLeft, letterWidth, undefined, startTop);
   return (1000 / printSpeed) * text.length;
 }
 
@@ -70,20 +70,21 @@ function createNewLine(container, cursor, startLeft, startTop, height) {
 
 async function requestAnswer(question) {
   const result = await fetch(
-    "http://localhost:54321",
+    "http://localhost:54321/functions/v1/ai-response",
     // "https://jyyhfyrnykdencwlwcus.functions.supabase.co/ai-response",
     {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs",
-        //   "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5eWhmeXJueWtkZW5jd2x3Y3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg2MjAwODAsImV4cCI6MTk4NDE5NjA4MH0.60YINNo4_tUzfrf7BgzWLMMs_v92vpT4UBJLHQmQ_Tk",
+        // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5eWhmeXJueWtkZW5jd2x3Y3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg2MjAwODAsImV4cCI6MTk4NDE5NjA4MH0.60YINNo4_tUzfrf7BgzWLMMs_v92vpT4UBJLHQmQ_Tk",
         "Content-Type": "application/json",
       },
-      body: { "question": question },
+      body: JSON.stringify({ question }),
       method: "POST",
     }
   );
-  console.log(result);
+  let data = await result.json();
+  return data.choices[0].text;
 }
 
 function getAnswer(container, cursor, startLeft, startTop, height) {
@@ -94,12 +95,14 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
   container.addEventListener(
     "keydown",
     (getKeystrokes = async (event) => {
+      console.log('keydown');
       if (event.code == "Enter") {
         // destroy listener;
         container.removeEventListener("keydown", getKeystrokes);
         // TODO initiate loading sequence
         // send request to api to get response
-        let result = await requestAnswer(line.innerHTML);
+        let result = await requestAnswer(line.innerHTML.slice(5));
+        console.log(line.innerHTML.slice(5))
         // create a new line
         let newLine = lineReturn(body, false);
         var currTop = parseFloat(startTop.slice(0, startTop.length - 2));
@@ -108,10 +111,11 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
         newTop = cursorReturn(cursor, "0.5em", formattedTop, height);
         // print response on the line
         let delay = animateLine(
-          "This is the answer from the computer.",
+          result,
           newLine,
           cursor,
-          "0.5em"
+          "0.5em",
+          formattedTop,
         );
         // TODO after printing call getAnswer
         // newTop = parseFloat(newTop.slice(0, newTop.length-2)) + (letterWidth*line.innerHTML.length-6) + "em";
@@ -135,10 +139,11 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
         return;
       }
       if (event.code == "Backspace") {
+        if (line.innerHTML.length <= 5) return;
         var newLeft =
           parseFloat(startLeft.slice(0, startLeft.length - 2)) +
-          (letterWidth * line.innerHTML.length - 6);
-        moveCursor(cursor, 1, newLeft + "em", -1 * letterWidth, true);
+          (letterWidth * line.innerHTML.length - 5);
+        moveCursor(cursor, 1, newLeft + "em", -1 * letterWidth, true, startTop);
         line.innerHTML = line.innerHTML.slice(0, line.innerHTML.length - 1);
         return;
       }
@@ -159,7 +164,7 @@ function getAnswer(container, cursor, startLeft, startTop, height) {
       var newLeft =
         parseFloat(startLeft.slice(0, startLeft.length - 2)) +
         (letterWidth * line.innerHTML.length - 5);
-      moveCursor(cursor, 1, newLeft + "em", letterWidth, true);
+      moveCursor(cursor, 1, newLeft + "em", letterWidth, true, startTop);
       line.innerHTML += event.key;
     })
   );
@@ -170,6 +175,6 @@ let body = document.getElementById("body");
 let currLine = lineReturn(body);
 let cursor = document.getElementById("cursor");
 
-let delay = animateLine("Hi, I'm Jared Lambert.", currLine, cursor, "0.5em");
+let delay = animateLine("Hi, I'm Jared Lambert.", currLine, cursor, "0.5em", "0em");
 setTimeout(() => getAnswer(body, cursor, "2.5em", "1.6em", 3.5), delay + 500);
 // _____ EXECUTION ______ //

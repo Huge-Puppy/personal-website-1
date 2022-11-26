@@ -3,16 +3,26 @@
 // This enables autocomplete, go to definition, etc.
 
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
+
 export const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey",
-    "Content-Type": "application/json",
-  };
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST",
+  "Access-Control-Expose-Headers": "Content-Length, X-JSON",
+  "Access-Control-Allow-Headers":
+    "apikey, X-Client-Info, Content-Type, Authorization, Accept, Accept-Language, X-Authorization",
+};
 
 serve(async (req) => {
+  const { method } = req
+
+  if (method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   const { question } = await req.json();
   let body = {
-    model: "text-ada-001",
+    model: "text-curie-001",
     prompt: `The following is a conversation between Jared Lambert and an interviewer. \
     Jared is fun, polite, and knowledgable. He shares information about himself from the \
     summary. If the answer is not in the summary, he responds with I do not know.\nSummary: \
@@ -23,21 +33,24 @@ serve(async (req) => {
     mobile apps. I made a mobile app called whatado that you can find at https://whatado.web.app. \
     I am learning more about web development and I am trying to be an entrepreneur.\nEmployer: \
     What is your name?\nJared: My name is Jared Lambert.\nQuestion: ${question}\nJared: `,
-    max_tokens: 50,
+    max_tokens: 15,
     temperature: 0,
   };
+
   const rawResponse = await fetch("https://api.openai.com/v1/completions", {
     headers: {
       Authorization:
-        "Bearer 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",
-      "Content-Type": "application/json",
+      `Bearer ${Deno.env.get('OPENAI_KEY')}`,
+        // "Bearer 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",
+        "OpenAI-Organization": 'org-n4SHuIV3xqY883QplkzFqnIf',
+        "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
     method: "POST",
   });
-  console.log(rawResponse);
-  return new Response(JSON.stringify(rawResponse.json()), {
-    headers: corsHeaders,
+
+  return new Response(JSON.stringify(await rawResponse.json()), {
+    headers: {...corsHeaders},
   });
 });
 

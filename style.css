@@ -5,9 +5,29 @@
     --bg-color:#463f3a;
 }
 
+.header-item a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    font-size: 1em;
+    height: 2em;
+    line-height: 2em;
+  }
+  
+  /* Change the link color to #111 (black) on hover */
+  .header-item a:hover {
+    background-color: #111;
+  }
+
 body {
     font-family: "courier", "monospace";
     background-color: var(--bg-color);
+}
+
+#body {
+    max-width: 70;
 }
 
 p, h1 {
@@ -27,6 +47,11 @@ p, h1 {
 .big {
     height: 2em;
     width: 1.1em;
+}
+
+.header-item {
+    float: right;
+    display: inline;
 }
 
 .headingType {
