@@ -1,14 +1,15 @@
 # Jared Lambert Personal Website
 ## AKA HugePuppy
 
-Making this open source because I like it like that. Hopefully this site inspires you to start building.
+first attempt at a website outside university.
+works 2/10
+looks 3/10
+interesting 7/10
 
 This site is made with:
 * 11ty static site generator
-* *insert template language here* 
+* nunjucks?
 * CSS
-
-and is hosted on Netlify.
 
 * * * 
 
